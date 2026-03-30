@@ -11,153 +11,172 @@ st.set_page_config(
 )
 
 # ─────────────────────────────────────────
-# CSS
+# CSS (라이트 모드 테마 - 밝고 깨끗한 디자인)
 # ─────────────────────────────────────────
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
 
+/* 전체 폰트 및 배경색 설정 */
 html, body, [class*="css"] { font-family: 'Noto Sans KR', sans-serif; }
-.stApp { background: #0d1117; }
+.stApp { background: #f8f9fa; }
 
+/* 헤더 영역 */
 .main-header {
     text-align: center;
-    padding: 2.5rem 1rem 1.8rem;
-    border-bottom: 1px solid #21262d;
+    padding: 3.5rem 1rem 2.5rem;
+    background: white;
+    border-bottom: 1px solid #e9ecef;
     margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
 }
 .tag {
     display: inline-block;
-    background: rgba(88,166,255,0.15);
-    color: #58a6ff;
-    border: 1px solid #58a6ff55;
+    background: #e7f1ff;
+    color: #0d6efd;
+    border: 1px solid #cfe2ff;
     border-radius: 999px;
-    font-size: 0.73rem;
+    font-size: 0.75rem;
     font-weight: 600;
-    padding: 0.18rem 0.9rem;
-    letter-spacing: 0.08em;
-    margin-bottom: 0.85rem;
+    padding: 0.25rem 1.2rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.05em;
 }
 .main-header h1 {
-    font-size: 2.2rem;
+    font-size: 2.5rem;
     font-weight: 700;
-    color: #e6edf3;
-    margin: 0 0 0.35rem;
+    color: #212529;
+    margin: 0 0 0.5rem;
 }
-.main-header p { color: #7d8590; font-size: 0.88rem; margin: 0; }
+.main-header p { color: #6c757d; font-size: 1rem; margin: 0; }
 
+/* 단원 카드 스타일 */
 .unit-card {
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 14px;
-    padding: 1.8rem 1.4rem;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 20px;
+    padding: 2.5rem 1.5rem;
     text-align: center;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03);
 }
-.unit-card .icon { font-size: 2.5rem; margin-bottom: 0.7rem; }
-.unit-card h3 { color: #e6edf3; font-size: 1.1rem; font-weight: 700; margin: 0 0 0.3rem; }
-.unit-card p  { color: #7d8590; font-size: 0.8rem; margin: 0; line-height: 1.5; }
+.unit-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.08);
+    border-color: #0d6efd;
+}
+.unit-card .icon { font-size: 3.5rem; margin-bottom: 1.2rem; }
+.unit-card h3 { color: #212529; font-size: 1.3rem; font-weight: 700; margin-bottom: 0.6rem; }
+.unit-card p  { color: #6c757d; font-size: 0.9rem; line-height: 1.6; }
 
+/* 공식 목록 버튼 스타일 */
 .formula-btn {
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-left: 3px solid #58a6ff;
-    border-radius: 0 10px 10px 0;
-    padding: 0.9rem 1.2rem;
-    margin-bottom: 0.55rem;
-}
-.formula-btn h4 { color: #e6edf3; font-size: 0.95rem; margin: 0 0 0.2rem; font-weight: 600; }
-.formula-btn p  { color: #7d8590; font-size: 0.79rem; margin: 0; }
-
-.section-card {
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 12px;
-    padding: 1.4rem 1.5rem;
+    background: white;
+    border: 1px solid #dee2e6;
+    border-left: 5px solid #0d6efd;
+    border-radius: 4px 15px 15px 4px;
+    padding: 1.5rem;
     margin-bottom: 1rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.formula-btn h4 { color: #212529; font-size: 1.1rem; margin-bottom: 0.4rem; font-weight: 600; }
+.formula-btn p  { color: #6c757d; font-size: 0.9rem; margin: 0; }
+
+/* 상세 페이지 섹션 카드 */
+.section-card {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 16px;
+    padding: 1.8rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 .sec-title {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
     text-transform: uppercase;
-    margin-bottom: 0.9rem;
+    margin-bottom: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
 }
-.blue  { color: #58a6ff; }
-.green { color: #3fb950; }
-.amber { color: #d29922; }
+.blue  { color: #0d6efd; }
+.green { color: #198754; }
+.amber { color: #d97706; }
 
+/* 변수 테이블 스타일 */
 .var-row {
     display: flex;
-    gap: 1rem;
-    padding: 0.38rem 0;
-    border-bottom: 1px solid #21262d;
-    font-size: 0.86rem;
+    gap: 1.5rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid #f1f3f5;
+    font-size: 0.95rem;
 }
 .var-row:last-child { border-bottom: none; }
-.var-sym { color: #79c0ff; min-width: 140px; font-weight: 500; }
-.var-dsc { color: #8b949e; }
+.var-sym { color: #0d6efd; min-width: 160px; font-weight: 600; }
+.var-dsc { color: #495057; }
 
 .step {
-    padding: 0.42rem 0;
-    color: #c9d1d9;
-    font-size: 0.87rem;
-    line-height: 1.7;
-    border-bottom: 1px solid #21262d;
+    padding: 0.7rem 0;
+    color: #343a40;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    border-bottom: 1px solid #f1f3f5;
 }
-.step:last-child { border-bottom: none; }
 
+/* 예제 문제/풀이 박스 */
 .example-q {
-    background: rgba(210,153,34,0.09);
-    border: 1px solid #d2991f44;
-    border-radius: 10px;
-    padding: 1rem 1.3rem;
-    margin-bottom: 0.6rem;
+    background: #fff9db;
+    border: 1px solid #ffe066;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
 }
-.example-q .ql { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; color: #d29922; margin-bottom: 0.4rem; }
-.example-q .qt { color: #e6edf3; font-size: 0.88rem; line-height: 1.6; }
+.example-q .ql { font-size: 0.8rem; font-weight: 700; color: #f08c00; margin-bottom: 0.6rem; }
+.example-q .qt { color: #212529; font-size: 1rem; font-weight: 500; }
 
 .example-a {
-    background: rgba(63,185,80,0.07);
-    border: 1px solid #3fb95044;
-    border-radius: 10px;
-    padding: 1rem 1.3rem;
+    background: #ebfbee;
+    border: 1px solid #b2f2bb;
+    border-radius: 12px;
+    padding: 1.5rem;
 }
-.example-a .al { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; color: #3fb950; margin-bottom: 0.4rem; }
-.example-a .at { color: #c9d1d9; font-size: 0.87rem; line-height: 1.85; }
+.example-a .al { font-size: 0.8rem; font-weight: 700; color: #2b8a3e; margin-bottom: 0.6rem; }
+.example-a .at { color: #212529; font-size: 0.95rem; line-height: 1.8; }
 
+/* 경로 표시(Breadcrumb) */
 .breadcrumb {
     display: flex;
     align-items: center;
-    gap: 0.45rem;
-    font-size: 0.82rem;
-    padding: 0.6rem 1rem;
-    background: #161b22;
-    border: 1px solid #21262d;
-    border-radius: 8px;
-    margin-bottom: 1.5rem;
-    color: #7d8590;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    padding: 0.8rem 1.2rem;
+    background: #f1f3f5;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    color: #6c757d;
 }
-.bc-link { color: #58a6ff; }
-.bc-sep  { color: #30363d; }
-.bc-cur  { color: #c9d1d9; }
+.bc-link { color: #0d6efd; font-weight: 500; }
+.bc-cur  { color: #212529; font-weight: 600; }
 
+/* Streamlit 버튼 오버라이드 */
 .stButton > button {
-    background: #21262d !important;
-    color: #c9d1d9 !important;
-    border: 1px solid #30363d !important;
-    border-radius: 8px !important;
-    font-family: 'Noto Sans KR', sans-serif !important;
-    font-size: 0.84rem !important;
-    padding: 0.38rem 1rem !important;
-    transition: all 0.15s !important;
+    background: white !important;
+    color: #495057 !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 10px !important;
+    padding: 0.5rem 1.2rem !important;
+    font-weight: 500 !important;
+    transition: all 0.2s !important;
 }
 .stButton > button:hover {
-    background: #30363d !important;
-    border-color: #58a6ff !important;
-    color: #e6edf3 !important;
+    border-color: #0d6efd !important;
+    color: #0d6efd !important;
+    background: #f8f9fa !important;
 }
-.stMarkdown p { color: #c9d1d9; }
+
+/* 텍스트 가독성 */
+.stMarkdown p, li { color: #343a40; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -475,13 +494,13 @@ def go(page, unit=None, formula=None):
 
 
 # ─────────────────────────────────────────
-# 헤더
+# 헤더 (항상 상단 표시)
 # ─────────────────────────────────────────
 st.markdown("""
 <div class="main-header">
   <div class="tag">2022 개정교육과정 · 고등학교 물리학</div>
   <h1>⚛️ 물리학 공식 사전</h1>
-  <p>단원을 선택하고 공식을 탐색하세요</p>
+  <p>단원을 선택하고 공식의 원리와 문제를 탐색해 보세요</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -501,12 +520,12 @@ if st.session_state.page == "unit":
             </div>
             """, unsafe_allow_html=True)
             st.markdown("<br>", unsafe_allow_html=True)
-            if st.button("단원 선택 →", key=f"u_{i}"):
+            if st.button("단원 탐색 시작 →", key=f"u_{i}", use_container_width=True):
                 go("formula", unit=unit_name)
 
 
 # ─────────────────────────────────────────
-# 공식 선택 페이지
+# 공식 목록 페이지
 # ─────────────────────────────────────────
 elif st.session_state.page == "formula":
     unit      = st.session_state.unit
@@ -515,28 +534,25 @@ elif st.session_state.page == "formula":
     st.markdown(f"""
     <div class="breadcrumb">
       <span class="bc-link">물리학</span>
-      <span class="bc-sep">›</span>
+      <span style="color:#dee2e6">/</span>
       <span class="bc-cur">{unit}</span>
     </div>
     """, unsafe_allow_html=True)
 
-    col_back, _ = st.columns([1, 9])
-    with col_back:
-        if st.button("← 단원 목록"):
-            go("unit")
+    if st.button("← 메인으로 돌아가기"):
+        go("unit")
 
     st.markdown(f"### {unit_data['icon']} {unit}")
-    st.markdown(f"<p style='color:#7d8590;font-size:0.87rem;margin-bottom:1.5rem'>{unit_data['desc']}</p>",
-                unsafe_allow_html=True)
+    st.markdown(f"<p style='color:#6c757d; margin-bottom:2rem;'>{unit_data['desc']}</p>", unsafe_allow_html=True)
 
     for fname, fdata in unit_data["formulas"].items():
         st.markdown(f"""
         <div class="formula-btn">
           <h4>{fname}</h4>
-          <p>{fdata['desc'][:50]}…</p>
+          <p>{fdata['desc'][:60]}...</p>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("자세히 보기 →", key=f"f_{fname}"):
+        if st.button("공식 상세 보기 →", key=f"f_{fname}"):
             go("detail", unit=unit, formula=fname)
 
 
@@ -551,52 +567,50 @@ elif st.session_state.page == "detail":
     st.markdown(f"""
     <div class="breadcrumb">
       <span class="bc-link">물리학</span>
-      <span class="bc-sep">›</span>
-      <span class="bc-link">{unit}</span>
-      <span class="bc-sep">›</span>
+      <span style="color:#dee2e6">/</span>
+      <span class="bc-link" style="cursor:pointer;" onclick="window.location.reload();">{unit}</span>
+      <span style="color:#dee2e6">/</span>
       <span class="bc-cur">{fname}</span>
     </div>
     """, unsafe_allow_html=True)
 
-    c1, c2, _ = st.columns([1.3, 1.8, 7])
+    c1, c2, _ = st.columns([1, 1, 5])
     with c1:
-        if st.button("← 공식 목록"):
-            go("formula", unit=unit)
+        if st.button("← 목록으로"): go("formula", unit=unit)
     with c2:
-        if st.button("↩ 단원 목록"):
-            go("unit")
+        if st.button("↩ 메인으로"): go("unit")
 
-    st.markdown(f"## {fname}")
-    st.markdown(f"<p style='color:#7d8590;font-size:0.9rem;margin-bottom:1.5rem'>{fdata['desc']}</p>",
-                unsafe_allow_html=True)
+    st.markdown(f"<h2 style='margin-top:1.5rem; color:#212529;'>{fname}</h2>", unsafe_allow_html=True)
+    st.markdown(f"<p style='color:#6c757d; font-size:1.05rem; margin-bottom:2rem;'>{fdata['desc']}</p>", unsafe_allow_html=True)
 
-    # 공식
+    # 핵심 공식
     st.markdown('<div class="section-card">', unsafe_allow_html=True)
-    st.markdown('<div class="sec-title blue">📐 핵심 공식</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sec-title blue">📐 핵심 공식 관계식</div>', unsafe_allow_html=True)
     for latex in fdata["latex"]:
         st.latex(latex)
     st.markdown('</div>', unsafe_allow_html=True)
 
-    # 변수 설명
-    st.markdown('<div class="section-card">', unsafe_allow_html=True)
-    st.markdown('<div class="sec-title blue">📋 변수 설명</div>', unsafe_allow_html=True)
-    for sym, desc in fdata["vars"].items():
-        st.markdown(f"""
-        <div class="var-row">
-          <span class="var-sym">{sym}</span>
-          <span class="var-dsc">{desc}</span>
-        </div>
-        """, unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    # 유도 과정
-    st.markdown('<div class="section-card">', unsafe_allow_html=True)
-    st.markdown('<div class="sec-title green">🔬 유도 과정</div>', unsafe_allow_html=True)
-    for step in fdata["derivation"]:
-        st.markdown(f'<div class="step">', unsafe_allow_html=True)
-        st.markdown(step)
+    # 변수 설명 및 유도 과정 (나란히 배치)
+    col_var, col_der = st.columns([1, 1], gap="medium")
+    
+    with col_var:
+        st.markdown('<div class="section-card" style="height:100%">', unsafe_allow_html=True)
+        st.markdown('<div class="sec-title blue">📋 변수 정의 및 단위</div>', unsafe_allow_html=True)
+        for sym, desc in fdata["vars"].items():
+            st.markdown(f"""
+            <div class="var-row">
+              <span class="var-sym">{sym}</span>
+              <span class="var-dsc">{desc}</span>
+            </div>
+            """, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
-    st.markdown('</div>', unsafe_allow_html=True)
+
+    with col_der:
+        st.markdown('<div class="section-card" style="height:100%">', unsafe_allow_html=True)
+        st.markdown('<div class="sec-title green">🔬 공식 유도 및 원리</div>', unsafe_allow_html=True)
+        for step in fdata["derivation"]:
+            st.markdown(f'<div class="step">{step}</div>', unsafe_allow_html=True)
+        st.markdown('</div>', unsafe_allow_html=True)
 
     # 예제 문제
     st.markdown(f"""
@@ -609,15 +623,18 @@ elif st.session_state.page == "detail":
     answer_lines = "<br>".join(fdata["example"]["a"])
     st.markdown(f"""
     <div class="example-a">
-      <div class="al">✅ 풀이</div>
+      <div class="al">✅ 단계별 풀이</div>
       <div class="at">{answer_lines}</div>
     </div>
     """, unsafe_allow_html=True)
 
-    # 풀이 수식 렌더링
+    # 수식 렌더링 섹션
     st.markdown("<br>", unsafe_allow_html=True)
-    with st.expander("🔢 수식 렌더링 보기"):
+    with st.expander("🔢 수식 정밀 렌더링으로 보기"):
         for line in fdata["example"]["a"]:
             matches = re.findall(r'\$(.*?)\$', line)
-            for m in matches:
-                st.latex(m)
+            if matches:
+                for m in matches:
+                    st.latex(m)
+            else:
+                st.write(line)
