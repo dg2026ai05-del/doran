@@ -1,0 +1,227 @@
+import streamlit as st
+import re
+
+# ─────────────────────────────────────────
+# 페이지 설정
+# ─────────────────────────────────────────
+st.set_page_config(
+    page_title="2026 화학 개정교육과정 사전",
+    page_icon="⚗️",
+    layout="wide",
+)
+
+# ─────────────────────────────────────────
+# 라이트 모드 커스텀 CSS (깔끔하고 단정한 디자인)
+# ─────────────────────────────────────────
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+html, body, [class*="css"] { font-family: 'Noto Sans KR', sans-serif; }
+.stApp { background: #fdfdfd; }
+
+/* 헤더 디자인 */
+.main-header {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    background: white;
+    border-bottom: 1px solid #f1f3f5;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+.tag {
+    display: inline-block;
+    background: #e7f5ff;
+    color: #1c7ed6;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.2rem 0.8rem;
+    margin-bottom: 0.8rem;
+}
+.main-header h1 { color: #212529; font-size: 2.2rem; font-weight: 700; }
+
+/* 카드 및 버튼 스타일 */
+.unit-card {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    transition: 0.2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+.unit-card:hover { border-color: #228be6; transform: translateY(-5px); }
+
+.formula-btn {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-left: 5px solid #228be6;
+    border-radius: 8px;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+/* 상세 섹션 스타일 */
+.section-card {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+.sec-title { font-size: 0.85rem; font-weight: 700; color: #1c7ed6; margin-bottom: 1rem; }
+
+.example-q { background: #fff9db; border-radius: 10px; padding: 1.2rem; margin-bottom: 1rem; border: 1px solid #fff3bf; }
+.example-a { background: #ebfbee; border-radius: 10px; padding: 1.2rem; border: 1px solid #d3f9d8; }
+
+.stButton>button { width: 100%; border-radius: 8px; }
+</style>
+""", unsafe_allow_html=True)
+
+# ─────────────────────────────────────────
+# 화학 개정 교육과정 데이터 (예시 데이터 포함)
+# ─────────────────────────────────────────
+CHEM_DATA = {
+    "(1) 물질의 세계": {
+        "icon": "💎",
+        "desc": "원자의 구조, 화학 결합, 물질의 미시적 관점",
+        "formulas": {
+            "몰 농도 (Molarity)": {
+                "latex": r"M = \dfrac{n}{V}",
+                "desc": "용액 1L 속에 녹아 있는 용질의 양(mol)을 나타낸 농도입니다.",
+                "vars": {"$M$": "몰 농도 (mol/L)", "$n$": "용질의 양 (mol)", "$V$": "용액의 부피 (L)"},
+                "derivation": ["① 용질의 입자 수(mol)를 측정", "② 전체 용액의 부피(L)를 측정", "③ 부피당 입자 수 비율 계산"],
+                "example": {
+                    "q": "0.5mol의 수산화나트륨(NaOH)이 녹아 있는 2L 용액의 몰 농도는?",
+                    "a": ["$M = 0.5 \text{ mol} / 2 \text{ L} = 0.25 \text{ M}$"]
+                }
+            },
+            "보어의 에너지 준위": {
+                "latex": r"E_n = -2.18 \times 10^{-18}\text{J} \times \dfrac{1}{n^2}",
+                "desc": "수소 원자 내 전자가 가질 수 있는 불연속적인 에너지 값입니다.",
+                "vars": {"$E_n$": "n번째 궤도의 에너지", "$n$": "주양자수 (1, 2, 3...)"},
+                "derivation": ["① 전자의 전기력과 구심력의 평형", "② 궤도 양자화 조건 적용", "③ 총 에너지 합 계산"],
+                "example": {
+                    "q": "주양자수 n=2인 궤도의 에너지를 구하시오.",
+                    "a": ["$E_2 = -2.18 \times 10^{-18} / 4 = -0.545 \times 10^{-18}\text{J}$"]
+                }
+            }
+        }
+    },
+    "(2) 화학 반응과 에너지": {
+        "icon": "🔥",
+        "desc": "동적 평형, 화학 반응에서 출입하는 에너지",
+        "formulas": {
+            "이상 기체 상태 방정식": {
+                "latex": r"PV = nRT",
+                "desc": "기체의 압력, 부피, 온도 사이의 관계를 나타내는 기본 방정식입니다.",
+                "vars": {"$P$": "압력 (atm)", "$V$": "부피 (L)", "$n$": "몰수 (mol)", "$R$": "기체 상수", "$T$": "절대 온도 (K)"},
+                "derivation": ["① 보일, 샤를, 아보가드로 법칙 통합", "② 비례 상수 R 도입", "③ $PV = nRT$ 성립"],
+                "example": {
+                    "q": "27°C, 1atm에서 기체 1mol의 부피는? (R=0.082)",
+                    "a": ["$T = 300K$", "$V = (1 \times 0.082 \times 300) / 1 = 24.6 \text{ L}$"]
+                }
+            }
+        }
+    }
+}
+
+# ─────────────────────────────────────────
+# 세션 관리 및 내비게이션
+# ─────────────────────────────────────────
+if "page" not in st.session_state: st.session_state.page = "unit"
+if "unit" not in st.session_state: st.session_state.unit = None
+if "formula" not in st.session_state: st.session_state.formula = None
+
+def go(page, unit=None, formula=None):
+    st.session_state.page = page
+    st.session_state.unit = unit
+    st.session_state.formula = formula
+    st.rerun()
+
+# ─────────────────────────────────────────
+# 메인 화면 구성
+# ─────────────────────────────────────────
+st.markdown("""
+<div class="main-header">
+    <div class="tag">2022 개정 교육과정 반영</div>
+    <h1>🧪 화학 공식 사전</h1>
+    <p>단원을 선택하고 상세 공식과 유도 과정을 학습하세요.</p>
+</div>
+""", unsafe_allow_html=True)
+
+# 1. 단원 선택 페이지
+if st.session_state.page == "unit":
+    cols = st.columns(2, gap="large")
+    for i, (u_name, u_data) in enumerate(CHEM_DATA.items()):
+        with cols[i]:
+            st.markdown(f"""
+            <div class="unit-card">
+                <div class="icon">{u_data['icon']}</div>
+                <h3>{u_name}</h3>
+                <p>{u_data['desc']}</p>
+            </div>
+            """, unsafe_allow_html=True)
+            if st.button(f"{u_name} 탐색 →", key=f"btn_{i}"):
+                go("formula_list", unit=u_name)
+
+# 2. 공식 목록 페이지
+elif st.session_state.page == "formula_list":
+    u_name = st.session_state.unit
+    u_data = CHEM_DATA[u_name]
+    
+    if st.button("⬅️ 이전 선택으로 (단원 선택)"): go("unit")
+    
+    st.markdown(f"### {u_data['icon']} {u_name}")
+    for f_name, f_data in u_data["formulas"].items():
+        st.markdown(f"""
+        <div class="formula-btn">
+            <div style="font-weight:700; font-size:1.1rem; color:#212529;">{f_name}</div>
+            <div style="font-size:0.9rem; color:#868e96;">{f_data['desc']}</div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button(f"{f_name} 상세보기 →", key=f"f_{f_name}"):
+            go("detail", unit=u_name, formula=f_name)
+
+# 3. 공식 상세 페이지
+elif st.session_state.page == "detail":
+    u_name = st.session_state.unit
+    f_name = st.session_state.formula
+    f_data = CHEM_DATA[u_name]["formulas"][f_name]
+    
+    col1, col2 = st.columns([1, 4])
+    with col1:
+        if st.button("⬅️ 목록으로"): go("formula_list", unit=u_name)
+    
+    st.markdown(f"## {f_name}")
+    
+    st.markdown('<div class="section-card">', unsafe_allow_html=True)
+    st.markdown('<div class="sec-title">📐 공식 관계식</div>', unsafe_allow_html=True)
+    st.latex(f_data["latex"])
+    st.markdown('</div>', unsafe_allow_html=True)
+    
+    c1, c2 = st.columns(2)
+    with c1:
+        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        st.markdown('<div class="sec-title">📋 변수 정의</div>', unsafe_allow_html=True)
+        for k, v in f_data["vars"].items():
+            st.markdown(f"**{k}** : {v}")
+        st.markdown('</div>', unsafe_allow_html=True)
+    with c2:
+        st.markdown('<div class="section-card">', unsafe_allow_html=True)
+        st.markdown('<div class="sec-title">🔬 유도 과정</div>', unsafe_allow_html=True)
+        for step in f_data["derivation"]:
+            st.write(step)
+        st.markdown('</div>', unsafe_allow_html=True)
+        
+    st.markdown(f"""
+    <div class="example-q">
+        <div style="font-weight:700; color:#f08c00; font-size:0.8rem; margin-bottom:0.5rem;">EXAMPLE QUESTION</div>
+        {f_data['example']['q']}
+    </div>
+    <div class="example-a">
+        <div style="font-weight:700; color:#2b8a3e; font-size:0.8rem; margin-bottom:0.5rem;">SOLUTION</div>
+        {f_data['example']['a'][0]}
+    </div>
+    """, unsafe_allow_html=True)
